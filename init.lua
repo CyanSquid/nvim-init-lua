@@ -1,5 +1,3 @@
-vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
-
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
@@ -9,6 +7,12 @@ vim.wo.relativenumber = true
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>c", ":e $MYVIMRC<CR>", { noremap = true, silent = true })
+
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { silent = true })
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { silent = true })
 
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -64,6 +68,41 @@ require('lazy').setup({
             { "<leader>e", function() require("harpoon"):list():select(2) end, desc = "harpoon to file 2", },
             { "<leader>i", function() require("harpoon"):list():select(3) end, desc = "harpoon to file 3", },
             { "<leader>o", function() require("harpoon"):list():select(4) end, desc = "harpoon to file 4", },
+        },
+    },
+
+    {
+        'nvim-telescope/telescope.nvim', tag = '0.1.8',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+            require('telescope').setup({ 
+                defaults = { 
+                    file_ignore_patterns = { 
+                        ".git/*", ".vs/*", "out/*" 
+                    }
+                }
+            })
+            local builtin = require('telescope.builtin')
+            vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+        end,
+    },
+
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        opts = {
+          -- your configuration comes here
+          -- or leave it empty to use the default settings
+          -- refer to the configuration section below
+        },
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require("which-key").show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
         },
     },
 })
